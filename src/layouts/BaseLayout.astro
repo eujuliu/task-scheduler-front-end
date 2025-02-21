@@ -1,10 +1,30 @@
-<!doctype html>
+<script is:inline>
+	const html = document.querySelector('html');
+	const localStorageConfig = localStorage.getItem('ts:configs');
+
+	let configs = localStorageConfig ? JSON.parse(localStorageConfig) : undefined;
+
+	if (!configs) {
+		configs = {
+			theme: 'dark',
+			locale: 'pt-br',
+		};
+
+		localStorage.setItem('ts:configs', JSON.stringify(configs));
+	}
+
+	if (html) {
+		html.setAttribute('data-theme', configs.theme);
+		html.setAttribute('lang', configs.locale);
+	}
+</script>
+
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<title>Astro Basics</title>
+		<title>Task Scheduler</title>
 	</head>
 	<body>
 		<slot />
