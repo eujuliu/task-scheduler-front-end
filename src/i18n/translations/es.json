@@ -1,0 +1,14 @@
+{
+  "header": {
+    "nav": {
+      "home": "Inicio",
+      "tasks": "Tarefas",
+      "assets": "Ativos"
+    },
+    "languages": {
+      "pt-br": "Português",
+      "en": "Inglês",
+      "es": "Espanhol"
+    }
+  }
+}

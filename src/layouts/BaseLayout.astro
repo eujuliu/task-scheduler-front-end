@@ -1,41 +1,80 @@
+---
+import "@/styles/global.css";
+
+import { buttonVariants } from "@/components/ui/button";
+import TextTranslation from "@/components/ui/text-translation";
+import LanguageSelector from "@/components/base/language-selector";
+import ThemeButton from "@/components/base/theme-button";
+
+const navOptions = [
+	{ name: "home", link: "/", translation: "header.nav.home" },
+	{ name: "tasks", link: "/tasks", translation: "header.nav.tasks" },
+	{ name: "assets", link: "/assets", translation: "header.nav.assets" },
+	{
+		name: "templates",
+		link: "/templates",
+		translation: "header.nav.templates",
+	},
+];
+const path = Astro.routePattern;
+---
+
 <script is:inline>
-	const html = document.querySelector('html');
-	const localStorageConfig = localStorage.getItem('ts:configs');
+	const html = document.querySelector("html");
+	const localStorageConfig = localStorage.getItem("ts:configs");
 
 	let configs = localStorageConfig ? JSON.parse(localStorageConfig) : undefined;
 
 	if (!configs) {
 		configs = {
-			theme: 'dark',
-			locale: 'pt-br',
+			theme: "dark",
+			locale: "pt-br",
 		};
 
-		localStorage.setItem('ts:configs', JSON.stringify(configs));
+		localStorage.setItem("ts:configs", JSON.stringify(configs));
 	}
 
 	if (html) {
-		html.setAttribute('data-theme', configs.theme);
-		html.setAttribute('lang', configs.locale);
+		html.setAttribute("data-theme", configs.theme);
+		html.setAttribute("lang", configs.locale);
 	}
 </script>
 
-<html lang="en">
+<html lang="pt-br" data-theme="dark">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<title>Task Scheduler</title>
 	</head>
-	<body>
-		<slot />
+	<body class="flex justify-center">
+		<div class="content md:w-[75%]">
+			<header class="flex justify-between py-5 px-2">
+				<nav>
+					<ul class="flex justify-center gap-x-3">
+						{
+							navOptions.map(({ link, translation }) => (
+								<li>
+									<a
+										href={link}
+										class={`${buttonVariants({ variant: "outline" })} ${path == link ? "disabled text-indigo-500" : ""}`}
+									>
+										<TextTranslation path={translation} client:only />
+									</a>
+								</li>
+							))
+						}
+					</ul>
+				</nav>
+
+				<div class="options flex flex-column gap-x-3">
+					<LanguageSelector client:only />
+					<ThemeButton client:only />
+				</div>
+			</header>
+			<main class="px-2">
+				<slot />
+			</main>
+		</div>
 	</body>
 </html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>

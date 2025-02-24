@@ -1,0 +1,39 @@
+{
+  "headers": {
+    "task": "Tarefa",
+    "status": "Situação",
+    "date": "Quando",
+    "createdAt": "Criado em",
+    "updatedAt": "Atualizado em",
+    "actions": "Ações"
+  },
+  "header": {
+    "nav": {
+      "home": "Inicio",
+      "tasks": "Tarefas",
+      "assets": "Ativos",
+      "templates": "Modelos"
+    },
+    "languages": {
+      "pt-br": "Português",
+      "en": "Inglês",
+      "es": "Espanhol"
+    }
+  },
+  "tasks": {
+    "title": "Tarefas",
+    "new": "Criar Tarefa",
+    "status": {
+      "completed": "Concluído",
+      "queued": "Em Fila",
+      "failed": "Falhou",
+      "canceled": "Cancelado"
+    },
+    "dropdown": {
+      "actions": "Ações",
+      "copyId": "Copiar ID",
+      "open": "Abrir",
+      "cancel": "Cancelar"
+    }
+  }
+}
