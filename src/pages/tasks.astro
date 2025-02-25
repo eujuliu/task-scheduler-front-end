@@ -3,6 +3,8 @@ import MenuHeader from "@/components/base/menu-header";
 import TextTranslation from "@/components/ui/text-translation";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import TaskDataTable, { type Task } from "@/components/tasks/task-data-table";
+import { TDialog } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 const tasks: Task[] = [
 	{
@@ -129,9 +131,19 @@ const tasks: Task[] = [
 ---
 
 <BaseLayout>
-	<MenuHeader hasButton>
+	<MenuHeader>
 		<TextTranslation path="tasks.title" slot="titleContent" client:only />
-		<TextTranslation path="tasks.new" slot="btnContent" client:only />
+		<TDialog slot="actions" client:only>
+			<Button
+				variant="ghost"
+				className="border border-lime-500 text-lime-400"
+				slot="trigger"
+			>
+				<TextTranslation path="tasks.new" client:only />
+			</Button>
+			<TextTranslation path="tasks.new" client:only slot="title" />
+			<div>Test</div>
+		</TDialog>
 	</MenuHeader>
 	<TaskDataTable tasks={tasks} client:load />
 </BaseLayout>

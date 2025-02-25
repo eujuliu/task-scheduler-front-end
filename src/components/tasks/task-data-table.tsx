@@ -1,11 +1,11 @@
-import dateFormatter from "@/utils/date-formatter";
+import { formatDate, formatDateRelative } from "@/utils/handle-date";
 import type { ColumnDef } from "@tanstack/react-table";
 import DataTable from "../ui/data-table";
 import { useStore } from "@nanostores/react";
 import { configs } from "@/stores/configs";
 import { useTranslation } from "@/i18n";
-import { DropdownMenuItem, DropdownMenuSeparator } from "../ui/dropdown-menu";
-import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenuItem } from "../ui/dropdown-menu";
+import { TTooltip } from "../ui/tooltip";
 
 export interface Template {
   id: string;
@@ -31,18 +31,20 @@ interface Props {
 export default function TaskDataTable({ tasks }: Props) {
   const $language = useStore(configs).locale;
   const t = useTranslation($language);
+
   const tailwindcss = {
     status: (bg: string = "bx-indigo-200") =>
       `flex justify-center ${bg} text-black p-1 rounded-sm font-medium text-white`,
   };
+
   const columns: ColumnDef<Task>[] = [
     {
       accessorKey: "task",
       header: t("headers.task"),
       cell: ({ row }) => (
-        <div className="dark:text-secondary bg-indigo-50 font-medium p-1 px-1.5 rounded-sm">
+        <span className="dark:text-secondary bg-indigo-50 font-medium p-1 px-1.5 rounded-sm">
           {row.getValue("task")}
-        </div>
+        </span>
       ),
     },
     {
@@ -54,33 +56,33 @@ export default function TaskDataTable({ tasks }: Props) {
         switch (value) {
           case "completed":
             return (
-              <div className={tailwindcss.status("bg-green-400")}>
+              <span className={tailwindcss.status("bg-green-400")}>
                 {t(`tasks.status.${value}`)}
-              </div>
+              </span>
             );
           case "canceled":
             return (
-              <div className={tailwindcss.status("bg-red-400")}>
+              <span className={tailwindcss.status("bg-red-400")}>
                 {t(`tasks.status.${value}`)}
-              </div>
+              </span>
             );
           case "failed":
             return (
-              <div className={tailwindcss.status("bg-red-700")}>
+              <span className={tailwindcss.status("bg-red-700")}>
                 {t(`tasks.status.${value}`)}
-              </div>
+              </span>
             );
           case "queued":
             return (
-              <div className={tailwindcss.status("bg-orange-400")}>
+              <span className={tailwindcss.status("bg-orange-400")}>
                 {t(`tasks.status.${value}`)}
-              </div>
+              </span>
             );
           default:
             return (
-              <div className={tailwindcss.status()}>
+              <span className={tailwindcss.status()}>
                 {t(`tasks.status.${value}`)}
-              </div>
+              </span>
             );
         }
       },
@@ -88,30 +90,68 @@ export default function TaskDataTable({ tasks }: Props) {
     {
       accessorKey: "date",
       header: t("headers.date"),
-      cell: ({ row }) => dateFormatter(new Date(row.getValue("date"))),
+      cell: ({ row }) => (
+        <TTooltip
+          trigger={formatDate(new Date(row.getValue("date")), $language)}
+          content={formatDateRelative(
+            new Date(row.getValue("date")),
+            $language,
+          )}
+        />
+      ),
     },
     {
       accessorKey: "createdAt",
       header: t("headers.createdAt"),
-      cell: ({ row }) => dateFormatter(new Date(row.getValue("createdAt"))),
+      cell: ({ row }) => (
+        <TTooltip
+          trigger={formatDate(new Date(row.getValue("createdAt")), $language)}
+          content={formatDateRelative(
+            new Date(row.getValue("createdAt")),
+            $language,
+          )}
+        />
+      ),
     },
     {
       accessorKey: "updatedAt",
       header: t("headers.updatedAt"),
-      cell: ({ row }) => dateFormatter(new Date(row.getValue("updatedAt"))),
+      cell: ({ row }) => (
+        <TTooltip
+          trigger={formatDate(new Date(row.getValue("updatedAt")), $language)}
+          content={formatDateRelative(
+            new Date(row.getValue("updatedAt")),
+            $language,
+          )}
+        />
+      ),
     },
   ];
+
   const dropDownContent = (task: Task) => (
     <>
       <DropdownMenuItem
-        onClick={() => window.location.assign(`/tasks/${task.id}`)}
+        onClick={(e) => {
+          e.stopPropagation();
+          window.location.assign(`/tasks/${task.id}`);
+        }}
       >
         {t("tasks.dropdown.open")}
       </DropdownMenuItem>
-      <DropdownMenuItem onClick={() => navigator.clipboard.writeText(task.id)}>
+      <DropdownMenuItem
+        onClick={(e) => {
+          e.stopPropagation();
+          navigator.clipboard.writeText(task.id);
+        }}
+      >
         {t("tasks.dropdown.copyId")}
       </DropdownMenuItem>
-      <DropdownMenuItem disabled={task.status != "Created"}>
+      <DropdownMenuItem
+        disabled={task.status != "Created"}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
         {t("tasks.dropdown.cancel")}
       </DropdownMenuItem>
     </>

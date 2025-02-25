@@ -1,0 +1,56 @@
+---
+import { buttonVariants } from "@/components/ui/button";
+import TextTranslation from "@/components/ui/text-translation";
+import LanguageSelector from "@/components/base/language-selector";
+import ThemeButton from "@/components/base/theme-button";
+
+const navOptions = [
+	{ name: "home", link: "/", translation: "header.nav.home" },
+	{ name: "tasks", link: "/tasks", translation: "header.nav.tasks" },
+	{ name: "assets", link: "/assets", translation: "header.nav.assets" },
+	{
+		name: "templates",
+		link: "/templates",
+		translation: "header.nav.templates",
+		submenus: [
+			{
+				name: "emails",
+				link: "/emails",
+				translation: "header.nav.emails",
+				disabled: false,
+			},
+			{
+				name: "whatsapp",
+				link: "/whatsapp",
+				translation: "header.nav.whatsapp",
+				disabled: true,
+			},
+		],
+	},
+];
+const path = Astro.routePattern;
+---
+
+<header class="flex justify-between py-5 px-2">
+	<nav>
+		<ul class="flex justify-center gap-x-3">
+			{
+				navOptions.map(({ link, translation }) => (
+					<li>
+						<a
+							href={link}
+							class={`${buttonVariants({ variant: "outline" })} ${path == link ? "disabled text-indigo-500" : ""}`}
+						>
+							<TextTranslation path={translation} client:only />
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</nav>
+
+	<div class="options flex flex-column gap-x-3">
+		<LanguageSelector client:only />
+		<ThemeButton client:only />
+	</div>
+</header>
